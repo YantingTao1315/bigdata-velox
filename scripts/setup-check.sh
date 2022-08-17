@@ -17,7 +17,7 @@ set -e
 set -x
 
 export DEBIAN_FRONTEND=noninteractive
-apt update
+sudo apt update
 apt install --no-install-recommends -y clang-format-12 python3-pip git make ssh
 pip3 install cmake_format black
 pip3 cache purge
