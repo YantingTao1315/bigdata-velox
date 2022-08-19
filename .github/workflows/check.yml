@@ -1,0 +1,77 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+name: check
+
+on:
+  push:
+    branches: [ developer ]
+  pull_request:
+    branches: [ developer ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: install environment
+        run: |
+          # cat /proc/cpuinfo && cat /proc/meminfo && df -h
+          # pwd && ls -a
+          git fetch
+          bash scripts/ci-setup-check.sh
+
+      - name: format-check
+        working-directory: ${{github.workspace}}
+        run: |
+          git branch
+          git diff --name-only
+          git diff --name-only HEAD
+          git --no-pager log --decorate=short --pretty=oneline -n4
+          git fetch --recurse-submodules=no origin developer ${{github.event.pull_request.base.sha}}
+          echo "-------------------------------"
+          echo ${{github.event.pull_request.base.sha}}
+          git branch
+          git --no-pager log --pretty=oneline -n4
+          # cat scripts/check.py
+          # python3 scripts/check.py format developer
+          # scripts/check.py format developer
+          echo "aaaaaa out of here aaaaaaa"
+          make format-check
+          if ! make format-check; then
+            scripts/check.py format developer --fix
+            echo -e "\n==== Apply using:"
+            echo "patch -p1 \<<EOF"
+            git --no-pager diff
+            echo "EOF"
+            false
+          fi
+          echo "end end"
+
+      - name: header-check
+        run: |
+          scripts/check.py header developer
+          if $?; then
+            scripts/check.py header developer --fix
+            echo -e "\n==== Apply using:"
+            echo "patch -p1 \<<EOF"
+            git --no-pager diff
+            echo "EOF"
+            false
+          fi
+          echo "end end"

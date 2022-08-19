@@ -173,7 +173,7 @@ def get_commit(files):
     if files == "commit":
         return "HEAD^"
 
-    if files == "main" or files == "master":
+    if files == "main" or files == "master" or files == "developer":
         return util.run(f"git merge-base origin/{files} HEAD")[1]
 
     return ""
@@ -191,7 +191,10 @@ def get_files(commit, path):
         for root, dirs, files in os.walk(path):
             for name in files:
                 filelist.append(os.path.join(root, name))
-
+    print("in get files")
+    print("files: ", filelist)
+    print("commit: ", commit)
+    print("path:", path)
     return [
         file
         for file in filelist
@@ -222,6 +225,7 @@ def add_options(parser):
 
     branch_parser = add_check_options(files, "main")
     branch_parser = add_check_options(files, "master")
+    branch_parser = add_check_options(files, "developer")
     commit_parser = add_check_options(files, "commit")
 
 
@@ -276,6 +280,8 @@ def tidy(args):
 
 def main():
     args = parse_args()
+    print("ininin")
+    print(args)
     return globals()[args.command](args)
 
 
