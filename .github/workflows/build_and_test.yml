@@ -27,9 +27,34 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Clean up CI directory
-        working-directory: ${{github.workspace}}
+      - uses: actions/checkout@v3
+
+      - name: install environment
         run: |
-          echo "build and test"
-          pwd
-          ls
+          # bash .github/scripts/setup-ubuntu.sh
+
+      - name: Update submodules
+        run: |
+          git submodule sync --recursive
+          git submodule update --init --recursive
+
+      - name: Build
+        run: |
+          make debug NUM_THREADS=16 MAX_HIGH_MEM_JOBS=8 MAX_LINK_JOBS=8 EXTRA_CMAKE_FLAGS="-DVELOX_ENABLE_ARROW=ON"
+
+      - name: Update submodules
+        run: |
+          git submodule sync --recursive
+          git submodule update --init --recursive
+
+      - name: Run Unit Tests
+        run: |
+          cd _build/debug && ctest -j 16 -VV --output-on-failure
+
+      - name: Run Fuzzer Tests
+        run: |
+          make fuzzertest
+
+      - name: Run Example Binaries
+        run: |
+          find _build/debug/velox/examples/ -maxdepth 1 -type f -executable -exec "{}" \;

@@ -27,55 +27,44 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Clean up CI directory
-        working-directory: ${{github.workspace}}
-        run: |
-          echo "implement in the future"
-          pwd
-          ls
-
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: install environment
         run: |
           # cat /proc/cpuinfo && cat /proc/meminfo && df -h
-          # pwd && ls
-          git branch
+          # pwd && ls -a
           git fetch
-          git branch
-          # export DEBIAN_FRONTEND=noninteractive
-          sudo apt update
-          sudo apt install --no-install-recommends -y clang-format-12 python3-pip git make ssh
-          echo "-----------------------------------------------------------------1"
-          pip3 install cmake_format black regex
-          echo "-----------------------------------------------------------------2"
-          
-          # pip3 cache purge
+          bash .github/scripts/setup-check.sh
 
-          sudo apt purge --auto-remove -y python3-pip
-          sudo update-alternatives --install /usr/bin/clang-format clang-format "$(command -v clang-format-12)" 12
-          sudo apt clean
-
-          bash scripts/setup-helper-functions.sh
-      
       - name: format-check
+        working-directory: ${{github.workspace}}
         run: |
+          git --no-pager log --decorate=short --pretty=oneline -n4
+          git --no-pager log --pretty=oneline -n2
+          cat scripts/check.py
+          # python3 scripts/check.py format developer
+          # scripts/check.py format developer
+          echo "aaaaaa out of here aaaaaaa"
+          make format-check
           if ! make format-check; then
-            make format-fix
+            scripts/check.py format developer --fix
             echo -e "\n==== Apply using:"
             echo "patch -p1 \<<EOF"
             git --no-pager diff
             echo "EOF"
             false
           fi
+          echo "end end"
 
       - name: header-check
         run: |
-          if ! make header-check; then
-            make header-fix
+          scripts/check.py header developer
+          if $?; then
+            scripts/check.py header developer --fix
             echo -e "\n==== Apply using:"
             echo "patch -p1 \<<EOF"
             git --no-pager diff
             echo "EOF"
             false
           fi
+          echo "end end"
