@@ -16,7 +16,7 @@
 # Minimal setup for Ubuntu 20.04.
 set -eufx -o pipefail
 SCRIPTDIR=$(dirname "${BASH_SOURCE[0]}")
-source $SCRIPTDIR/setup-helper-functions.sh
+source $SCRIPTDIR/ci-setup-helper-functions.sh
 
 # Folly must be built with the same compiler flags so that some low level types
 # are the same size.
@@ -27,9 +27,9 @@ NPROC=$(getconf _NPROCESSORS_ONLN)
 DEPENDENCY_DIR=${DEPENDENCY_DIR:-$(pwd)}
 
 # Install all velox and folly dependencies.
-apt update
-DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install tzdata
-apt install -y \
+sudo apt update
+DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC sudo apt-get -y install tzdata
+sudo apt install -y \
   g++ \
   cmake \
   ccache \
