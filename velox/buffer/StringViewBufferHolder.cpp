@@ -18,7 +18,8 @@
 #include "velox/buffer/Buffer.h"
 #include "velox/type/StringView.h"
 
-namespace facebook::velox {
+namespace 
+facebook::velox {
 
 StringView StringViewBufferHolder::getOwnedStringView(
     const char* data,

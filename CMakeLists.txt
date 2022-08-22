@@ -18,7 +18,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake" ${CMAKE_MODULE_PATH})
 project(velox)
 
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
-
+message(STATUS "HOST SYSTEM NAME:  ${CMAKE_HOST_SYSTEM_NAME}")
 # Add all options below
 option(
   VELOX_BUILD_TESTING
@@ -360,6 +360,12 @@ if(CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin")
 endif()
 find_package(BISON 3.0.4 REQUIRED)
 find_package(FLEX 2.5.13 REQUIRED)
+if(FLEX_FOUND)
+  message(STATUS "xxxx----: ${FLEX_INCLUDE_DIR}")
+  message(STATUS "xxxx----s: ${FLEX_INCLUDE_DIRS}")
+else(FLEX_FOUND)
+  message(STATUS "cannot found flex")
+endif(FLEX_FOUND)
 
 include_directories(SYSTEM velox)
 include_directories(SYSTEM velox/external)

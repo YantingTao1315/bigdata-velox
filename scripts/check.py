@@ -170,9 +170,11 @@ def tidy_command(commit, files, fix):
 
 
 def get_commit(files):
+    print("merge command:", files)
     if files == "commit":
         return "HEAD^"
 
+    print("group: ", util.run(f"git merge-base origin/{files} HEAD")[1])
     if files == "main" or files == "master" or files == "developer":
         return util.run(f"git merge-base origin/{files} HEAD")[1]
 
