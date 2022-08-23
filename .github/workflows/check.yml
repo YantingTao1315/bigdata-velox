@@ -27,14 +27,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: install environment
         run: |
           # cat /proc/cpuinfo && cat /proc/meminfo && df -h
           # pwd && ls -a
-          git fetch
-          bash scripts/ci-setup-check.sh
+          # git fetch
+          # bash scripts/ci-setup-check.sh
 
       - name: format-check
         working-directory: ${{github.workspace}}
@@ -42,10 +44,17 @@ jobs:
           git branch
           git diff --name-only
           git diff --name-only HEAD
-          git --no-pager log --decorate=short --pretty=oneline -n4
+          echo "-------------------------------1"
           git fetch --recurse-submodules=no origin developer ${{github.event.pull_request.base.sha}}
-          echo "-------------------------------"
+          # git merge-base origin/developer HEAD
+          git --no-pager log --decorate=short --pretty=oneline -n4
+          echo "-------------------------------2"
           echo ${{github.event.pull_request.base.sha}}
+          echo ${{github.event.pull_request.head.ref}}
+          echo ${{github.event.pull_request.base.ref}}
+
+
+          git diff --name-only ${{github.event.pull_request.base.sha}}
           git branch
           git --no-pager log --pretty=oneline -n4
           # cat scripts/check.py

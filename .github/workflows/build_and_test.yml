@@ -31,7 +31,7 @@ jobs:
 
       - name: install environment
         run: |
-          bash scripts/ci-setup-ubuntu.sh
+          # bash scripts/ci-setup-ubuntu.sh
 
       - name: Update submodules
         run: |
@@ -40,7 +40,7 @@ jobs:
 
       - name: Build
         run: |
-          make release NUM_THREADS=16 MAX_HIGH_MEM_JOBS=8 MAX_LINK_JOBS=8
+          sudo make release NUM_THREADS=16 MAX_HIGH_MEM_JOBS=8 MAX_LINK_JOBS=8
 
       - name: Run Unit Tests
         run: |

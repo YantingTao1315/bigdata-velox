@@ -29,7 +29,6 @@ DEPENDENCY_DIR=${DEPENDENCY_DIR:-$(pwd)}
 # Install all velox and folly dependencies.
 apt update
 DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get -y install tzdata
-apt update
 apt install -y \
   g++ \
   cmake \

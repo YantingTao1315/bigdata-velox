@@ -23,8 +23,19 @@ flex_target(
 
 add_flex_bison_dependency(TypeCalculationScanner TypeCalculationParser)
 
+find_package(flex)
+
 include_directories(${PROJECT_BINARY_DIR})
+find_package(FLEX 2.5.13 REQUIRED)
+if(FLEX_FOUND)
+  message(STATUS "xxxx----: ${FLEX_INCLUDE_DIR}")
+  message(STATUS "xxxx----s: ${FLEX_INCLUDE_DIRS}")
+else(FLEX_FOUND)
+  message(STATUS "cannot found flex")
+endif(FLEX_FOUND)
+
 include_directories(${FLEX_INCLUDE_DIRS})
+message(STATUS "xxxx: ${FLEX_INCLUDE_DIRS}")
 add_library(velox_type_calculation ${BISON_TypeCalculationParser_OUTPUTS}
                                    ${FLEX_TypeCalculationScanner_OUTPUTS})
 target_link_libraries(velox_type_calculation velox_common_base)

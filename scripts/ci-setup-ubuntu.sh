@@ -16,7 +16,7 @@
 # Minimal setup for Ubuntu 20.04.
 set -eufx -o pipefail
 SCRIPTDIR=$(dirname "${BASH_SOURCE[0]}")
-source $SCRIPTDIR/setup-helper-functions.sh
+source $SCRIPTDIR/ci-setup-helper-functions.sh
 
 # Folly must be built with the same compiler flags so that some low level types
 # are the same size.
@@ -53,7 +53,11 @@ sudo apt install -y \
   liblzo2-dev \
   protobuf-compiler \
   bison \
-  flex
+  flex \
+  libfl-dev
+
+ls /usr/bin
+ls /usr/include
 
 function run_and_time {
   time "$@"
