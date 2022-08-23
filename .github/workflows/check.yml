@@ -19,9 +19,11 @@ name: check
 
 on:
   push:
-    branches: [ developer ]
+    branches: 
+      - developer
+      - WW*
   pull_request:
-    branches: [ developer ]
+    branches: [ WW* ]
 
 jobs:
   build:
