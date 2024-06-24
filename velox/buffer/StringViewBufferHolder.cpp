@@ -17,7 +17,7 @@
 #include "velox/buffer/StringViewBufferHolder.h"
 #include "velox/buffer/Buffer.h"
 #include "velox/type/StringView.h"
-
+int      aaaa;
 namespace facebook::velox {
 
 StringView StringViewBufferHolder::getOwnedStringView(
